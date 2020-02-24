@@ -13,15 +13,19 @@ tweets<-read_csv("./Tweets.csv")
 
 
 # use something like this to create a list of Trues and Falses to see if each tweet matches some regex expression
-subject1<-str_detect(tweets$Text, regex("#blacklivesmatter", ignore_case=TRUE))
-subject2<-str_detect(tweets$Text, regex("#hello", ignore_case=TRUE))
-sum(subject1)
-sum(subject2)
-filter = subject1 | subject2
+# looks for any string that contains any of the words: "police", "cop(s)", "law enforcement" with any amount of space between the two words, " PD " with possible punctuation between the letters
+subject1<-str_detect(tweets$Text, regex("police | cops? | law\\s*enforcement | \\s+p\\.{0,1}d\\.{0,1}\\s+", ignore_case=TRUE))
 
+# looks for any string that contains any of the words: "black live(s) or black life" with any spacing between the two words
+subject2<-str_detect(tweets$Text, regex("black\\s*(?:life|lives?)", ignore_case=TRUE))
+
+# str_detect(c('hi there', 'hithere', 'hi    there'), regex("hi\\s*there"))
+
+filter = subject1 | subject2
 
 # then add it to a new column in the original tibble
 tweets$containsSubjects = filter
 
 # here's how to view the tweets and whether the expression was matched
-tweets %>% select(Text, containsSubjects) %>% filter(containsSubjects == TRUE)
+tweets %>% select(X1, Text, containsSubjects) %>% filter(containsSubjects == TRUE)
+
