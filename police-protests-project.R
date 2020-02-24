@@ -1,3 +1,4 @@
+rm(list=ls())
 library(tidyverse)
 
 mayors<-read_csv(file="https://raw.githubusercontent.com/jmontgomery/jmontgomery.github.io/master/PDS/Datasets/Mayors.csv")
@@ -54,12 +55,30 @@ by_twitterHandle <- by_twitterHandle %>% summarize(numberOfTweetsWithSubject = s
 by_twitterHandle # this contains screen name and number of tweets with subject
 
 
-
-
 # Want to add column to by_twitterHandle that contains the population of the mayor associated with the twitter handle
 by_twitterHandle<-rename(by_twitterHandle, TwitterHandle=ScreenName) # get column name to match the one in the mayors tibble
 
 # use inner join to get information about each twitter handle because if there is no information about the mayor with the twitter handle, then there is no point in keeping the twitter handle
 by_twitterHandle <- by_twitterHandle %>% inner_join(select(mayors, TwitterHandle, FirstName, LastName, Population), by="TwitterHandle")
 
-by_twitterHandle %>% filter(TwitterHandle == "robertgarcialb")
+# get rid of na data
+by_twitterHandle <- by_twitterHandle %>% filter(!is.na(Population))
+
+# group things together if they have a population within the same 1000
+popGroupSize = 1000
+test <- by_twitterHandle %>% group_by(groupPop = floor(Population/popGroupSize))
+test <- test %>% summarize(averageTweets = mean(numberOfTweetsWithSubject)) # find the mean number of tweets per group
+
+# ggplot(data=test, mapping=aes(x=log(groupPop,base=10), y=averageTweets))+
+#   geom_point()
+
+ggplot(data=test, mapping=aes(x=groupPop,base=10, y=averageTweets))+
+  geom_point()+
+  geom_smooth(se=FALSE)
+
+# ggplot(data=by_twitterHandle, mapping=aes(x=Population, base=10, y=numberOfTweetsWithSubject))+
+#   geom_point()+
+#   geom_smooth(se=FALSE)
+
+
+  
