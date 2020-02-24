@@ -1,10 +1,12 @@
 library(tidyverse)
 
+mayors<-read_csv(file="https://raw.githubusercontent.com/jmontgomery/jmontgomery.github.io/master/PDS/Datasets/Mayors.csv")
+
 
 # need to make sure tweets file is in folder
 tweets<-read_csv("./Tweets.csv")
 
-# str(tweets)
+str(tweets)
 # aTweet<-tweets[1,]$Text # get one row and one column
 # split<-str_split(aTweet, pattern = " ")
 # str(split)
@@ -28,4 +30,27 @@ tweets$containsSubjects = filter
 
 # here's how to view the tweets and whether the expression was matched
 tweets %>% select(X1, Text, containsSubjects) %>% filter(containsSubjects == TRUE)
+
+
+####################
+# get mayor data set ready
+mayors %>%
+  count(TwitterHandle) %>%
+  filter(n>1)
+# the TwitterHandles "robertgarcialb" and "rodhiggins2017" have two people associated with them
+
+mayors %>% filter(TwitterHandle == "robertgarcialb" | TwitterHandle == "rodhiggins2017") %>% select(X1, TwitterHandle, FirstName, LastName)
+# entries 1008 and 1408 need to be dropped
+
+mayors<-mayors %>% filter(X1!=68 & X1!=1408)
+# now all TwitterHandles are unique
+
+
+
+# group the tweets by mayor
+by_mayor <- tweets %>% group_by()
+
+
+
+
 
