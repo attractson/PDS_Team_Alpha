@@ -42,15 +42,24 @@ mayors %>%
 mayors %>% filter(TwitterHandle == "robertgarcialb" | TwitterHandle == "rodhiggins2017") %>% select(X1, TwitterHandle, FirstName, LastName)
 # entries 1008 and 1408 need to be dropped
 
-mayors<-mayors %>% filter(X1!=68 & X1!=1408)
-# now all TwitterHandles are unique
+mayors<-mayors %>% filter(X1!=1008 & X1!=1408)
+# now all TwitterHandles and mayor names are unique
+####################
+
+
+# group the tweets by twitter handle
+by_twitterHandle <- tweets %>% group_by(ScreenName)
+by_twitterHandle <- by_twitterHandle %>% summarize(numberOfTweetsWithSubject = sum(containsSubjects)) # this gets number of tweets on the subjects we filtered for from a specific twitter handle
+
+by_twitterHandle # this contains screen name and number of tweets with subject
 
 
 
-# group the tweets by mayor
-by_mayor <- tweets %>% group_by()
 
+# Want to add column to by_twitterHandle that contains the population of the mayor associated with the twitter handle
+by_twitterHandle<-rename(by_twitterHandle, TwitterHandle=ScreenName) # get column name to match the one in the mayors tibble
 
+# use inner join to get information about each twitter handle because if there is no information about the mayor with the twitter handle, then there is no point in keeping the twitter handle
+by_twitterHandle <- by_twitterHandle %>% inner_join(select(mayors, TwitterHandle, FirstName, LastName, Population), by="TwitterHandle")
 
-
-
+by_twitterHandle %>% filter(TwitterHandle == "robertgarcialb")
