@@ -65,7 +65,7 @@ by_twitterHandle <- by_twitterHandle %>% inner_join(select(mayors, TwitterHandle
 by_twitterHandle <- by_twitterHandle %>% filter(!is.na(Population))
 
 # group things together if they have a population within the same 1000
-popGroupSize = 1000
+popGroupSize = 10000
 test <- by_twitterHandle %>% group_by(groupPop = floor(Population/popGroupSize))
 test <- test %>% summarize(averageTweets = mean(numberOfTweetsWithSubject)) # find the mean number of tweets per group
 
