@@ -6,6 +6,9 @@ mayors<-read_csv(file="https://raw.githubusercontent.com/jmontgomery/jmontgomery
 
 # need to make sure tweets file is in folder
 tweets<-read_csv("./Tweets.csv")
+## Danny
+tweets<-read_csv("~/Downloads/Tweets.csv")
+
 
 str(tweets)
 # aTweet<-tweets[1,]$Text # get one row and one column
