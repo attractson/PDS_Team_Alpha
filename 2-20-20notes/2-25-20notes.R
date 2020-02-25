@@ -51,5 +51,32 @@ VSGex<- VSGex %$%
   plot(table(fav_sanders_binary, fav_biden_binary))
 
 
+##back to note
+
+VSG1<-read_csv("~/Downloads/VOTER_Survey_Jan217_Release1-csv.csv")
+VSG.fav<-VSG1 %>% 
+  select(starts_with("fav"))
+##o **overriding with NA
+output<-as.data.frame(matrix(NA, nrow(VSG.fav), ncol(VSG.fav)))
+for(i in seq_along(VSG.fav)){
+  output[,i]<-(VSG.fav[,i]<=2)*1
+}
+for(i in seq_along(VSG.fav)){
+  VSG.fav[,i]= na_if(VSG.fav[[i]],VSG.fav[[i]]>4)
+  VSG.fav[,i]<-(VSG.fav[,i]<=2)*1
+}
+head(VSG.fav)
+
+#map -> list
+#map_lgl makes a logical vector 
+#map_int makes an integer 
+#map_dbl makes a double vector 
+#map_chr makes a character
+map(VSG.fav, mean, na.rm=TRUE)
+
+map_dbl(VSG.fav, mean, na.rm=TRUE)
+
+
+
 
 
