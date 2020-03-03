@@ -3,7 +3,7 @@ rm(list=ls())
 library(tidyverse)
 
 #For Danny
-EX<-read_csv("~/Downloads/VOTER_Survey_Jan217_Release1-csv.csv")
+EX<-read_csv("~/Downloads/correlatesofstatepolicyprojectv2_1.csv")
 head(EX)
 #16 variables
 EX1<- EX %>%
