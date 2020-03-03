@@ -3,6 +3,7 @@ rm(list=ls())
 library(tidyverse)
 
 #For Danny
+##http://ippsr.msu.edu/sites/default/files/correlatesofstatepolicyprojectv2_1.csv
 EX<-read_csv("~/Downloads/correlatesofstatepolicyprojectv2_1.csv")
 head(EX)
 #16 variables
