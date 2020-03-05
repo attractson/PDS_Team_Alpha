@@ -4,8 +4,6 @@ library(tidyverse)
 
 #For Danny
 EX<-read_csv("./correlatesofstatepolicyprojectv2_1.csv")
-##http://ippsr.msu.edu/sites/default/files/correlatesofstatepolicyprojectv2_1.csv
-EX<-read_csv("~/Downloads/correlatesofstatepolicyprojectv2_1.csv")
 head(EX)
 #16 variables
 EX1<- EX %>%
@@ -21,7 +19,9 @@ prop<-function(x){
   
 a<-EX %>% 
   select(contains("incshare")) %>%
-  colMeans(na.rm=TRUE)
+  colMeans(na.rm=TRUE) %>%
+  lapply(prop)
+  
 
 a
   
