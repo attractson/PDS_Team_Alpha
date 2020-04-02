@@ -62,7 +62,7 @@ senate2018
 
 # TRAINING DATA:
 senateData
-senateModelTrain<-lm(VotePercentage~pvi + Democrat + weightexperience, data=senateData)
+senateModelTrain<-lm(VotePercentage~pvi*Democrat + Incumbent + state*Republican + cycle + weightexperience, data=senateData)
 senateModelPredictions<-predict(senateModelTrain, newdata=senate2018)
 
 senate2018$predictions = senateModelPredictions
