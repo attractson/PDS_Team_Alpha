@@ -18,16 +18,16 @@ testingData<-senateData %>% filter(year==2016)
 Model1<-glm(incumbentWon ~ cycle+state+Republican*pvi+weightexperience, family="binomial", data=trainingData)
 summary(Model1)
 
-Model1preds<-predict(Model1, type="response")
+Model1preds<-predict(Model1, newdata=testingData, type="response")
 Model1preds
 
 collapsed<-(Model1preds>0.5)*1
 collapsed # THIS IS THE PREDICTION
 
-trueNeg<-sum(collapsed==0 & trainingData$incumbentWon==0)
-falseNeg<-sum(collapsed==0 & trainingData$incumbentWon==1)
-falsePos<-sum(collapsed==1 & trainingData$incumbentWon==0)
-truePos<-sum(collapsed==1 & trainingData$incumbentWon==1)
+trueNeg<-sum(collapsed==0 & testingData$incumbentWon==0)
+falseNeg<-sum(collapsed==0 & testingData$incumbentWon==1)
+falsePos<-sum(collapsed==1 & testingData$incumbentWon==0)
+truePos<-sum(collapsed==1 & testingData$incumbentWon==1)
 
 trueNeg
 falseNeg
@@ -35,20 +35,44 @@ falsePos
 truePos
 
 
-#lFOREST
-Model1<-glm(incumbentWon ~ cycle+state+Republican*pvi+weightexperience, family="binomial", data=trainingData)
-summary(Model1)
+#FOREST
+install.packages(randomForest)
+library(randomForest)
 
-Model1preds<-predict(Model1, type="response")
-Model1preds
+equation<-as.formula("incumbentWon ~ cycle+state+Republican*pvi+weightexperience")
+mod1_forest<-randomForest(equation, data=trainingData, 
+                          ntree=201, mtry=2)
 
-collapsed<-(Model1preds>0.5)*1
+forestpreds<-predict(mod1_forest, newdata=testingData, type="response")
+collapsed<-(forestpreds>0.5)*1
 collapsed # THIS IS THE PREDICTION
 
-trueNeg<-sum(collapsed==0 & trainingData$incumbentWon==0)
-falseNeg<-sum(collapsed==0 & trainingData$incumbentWon==1)
-falsePos<-sum(collapsed==1 & trainingData$incumbentWon==0)
-truePos<-sum(collapsed==1 & trainingData$incumbentWon==1)
+trueNeg<-sum(collapsed==0 & testingData$incumbentWon==0)
+falseNeg<-sum(collapsed==0 & testingData$incumbentWon==1)
+falsePos<-sum(collapsed==1 & testingData$incumbentWon==0)
+truePos<-sum(collapsed==1 & testingData$incumbentWon==1)
+
+trueNeg
+falseNeg
+falsePos
+truePos
+
+#KNN
+library(class)
+trainingData
+testingData
+
+trainingDataX<-trainingData[,c("cycle", "state", "weightexperience", "Republican", "pvi")]
+senateX$inc<-senateX$inc+rnorm(length(senateX$inc), 0, .001)
+testX<-testingData[,c("cycle", "state", "weightexperience", "Republican", "pvi")]
+testX$inc<-senateX$inc+rnorm(length(senateX$inc), 0, .001)
+
+mod1_knn<-knn(trainingData[,c("cycle", "Republican","weightexperience","pvi")], test=testingData[,c("cycle","Republican","weightexperience", "pvi")], cl=trainingData$incumbentWon, k=10)
+
+trueNeg<-sum(mod1_knn==0 & testingData$incumbentWon==0)
+falseNeg<-sum(mod1_knn==0 & testingData$incumbentWon==1)
+falsePos<-sum(mod1_knn==1 & testingData$incumbentWon==0)
+truePos<-sum(mod1_knn==1 & testingData$incumbentWon==1)
 
 trueNeg
 falseNeg
