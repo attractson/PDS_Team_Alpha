@@ -1,7 +1,8 @@
 library(jsonlite)
+library(tidyverse)
 
-state_ratings<-fromJSON("C:/Users/ians-pc/Desktop/missouri_approval.json",flatten=TRUE)
-size1<-length(a$trendline)
+state_ratings<-fromJSON("./missouri_approval.json",flatten=TRUE)
+size1<-length(state_ratings$trendline)
 size1
 
 entries<-unlist(state_ratings$trendline)
@@ -20,15 +21,12 @@ disapproves
 neither<-as.vector(entries[seq(3,size2,by=3)])
 neither
 
-ratings_df<-data.frame(time=times,approves,disapproves,neither)
-ratings_df
 
+ratings_df<-data.frame(unix_time=as.numeric(times)/1000,approves,disapproves,neither)
 
-
-
-  typeof(a$trendline[1])
-(unlist(a$trendline[1])[1])
-str(as.data.frame(a))
+ratings_df<-ratings_df %>% mutate(date=as.Date(as.POSIXct(unix_time, origin="1970-01-01"))) %>%
+  mutate(net_approval = approves-disapproves)
+tail(ratings_df)
 
 # install.packages("rjson")
 # library(rjson)
