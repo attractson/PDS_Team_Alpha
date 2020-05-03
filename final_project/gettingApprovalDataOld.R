@@ -1,8 +1,20 @@
-rm(list=ls())
 library(jsonlite)
 library(tidyverse)
 
 states<-c("alabama","alaska","arizona","arkansas","california","colorado","connecticut","delaware","florida","georgia","hawaii","idaho","illinois","indiana","iowa","kansas","kentucky","louisiana","maine","montana","nebraska","nevada","new_hampshire","new_jersey","new_mexico","new_york","north_carolina","north_dakota","ohio","oklahoma","oregon","maryland","massachusetts","michigan","minnesota","mississippi","missouri","pennsylvania","rhode_island","south_carolina","south_dakota","tennessee","texas","utah","vermont","virginia","washington","west_virginia","wisconsin","wyoming")
+states_dfs<-c()
+
+# get times
+state_ratings<-fromJSON(paste0("./approvalData/missouri.json"),flatten=TRUE)
+size1<-length(state_ratings$trendline)
+print(size1)
+entries<-unlist(state_ratings$trendline)
+size2<-length(entries)
+times<-substr(names(entries[seq(1,size2,by=3)]),1,13)
+
+ratings_df<-data.frame(unix_time=as.numeric(times)/1000) %>%
+  mutate(date=as.Date(as.POSIXct(unix_time, origin="1970-01-01")))
+tail(ratings_df)
 
 for(state in states){
   state_ratings<-fromJSON(paste0("./approvalData/",state,".json"),flatten=TRUE)
@@ -11,12 +23,6 @@ for(state in states){
   entries<-unlist(state_ratings$trendline)
   
   size2<-length(entries)
-  
-  unix_times<-substr(names(entries[seq(1,size2,by=3)]),1,13)
-  unix_times<-as.numeric(unix_times)/1000
-  as.Date(as.POSIXct(unix_times, origin="1970-01-01"))
-  dates<-as.Date(as.POSIXct(unix_times, origin="1970-01-01"))
-  dates
   
   approves<-as.vector(entries[seq(1,size2,by=3)])
   approves
@@ -32,28 +38,13 @@ for(state in states){
   state_ratings_df<-data.frame(net_approval)
   names(state_ratings_df)[1]<-paste0(state,"_net_approval")
   
-  # append new data to end of running df
-  if(exists("ratings_df")){
-    # df created already
-    new_date<-c(ratings_df$date, dates)
-    new_state<-c(ratings_df$state, c(rep(state, length(dates))))
-    new_net_approval<-c(ratings_df$net_approval, net_approval)
-  }
-  else{
-    # df not created yet
-    new_date<-dates
-    new_state<-rep(state, length(dates))
-    new_net_approval<-net_approval
-  }
-  
-  ratings_df<-data.frame(date=new_date, state=new_state, net_approval=new_net_approval, stringsAsFactors = FALSE)
+  # append dfs together
+  ratings_df<-c(ratings_df, state_ratings_df)
 }
-head(ratings_df)
+head(as.data.frame(ratings_df))
+ratings_by_date<-as.data.frame(ratings_df)
 
-typeof(rep(state, length(dates)))
 
-str(ratings_df)
-ratings_by_state<-ratings_df
 
 
 # install.packages("rjson")
