@@ -89,14 +89,14 @@ str(ratings_by_state) # ratings dataframe
 str(covid_by_state) # cases and deaths dataframe
 
 combined_data<-inner_join(ratings_by_state, covid_by_state, by=c("state", "date"))
+combined_data <- mutate(combined_data, net_approval_rate=net_approval-lag(net_approval))
 combined_data
-
 
 # FOR GRAPHING
 
 # example for data from one state
 combined_data
-write(combined_data,"./combined_data.csv")
+write.csv(combined_data,"./combined_data.csv")
 # list of all the states
 states
 
@@ -104,3 +104,18 @@ ggplot(combined_data[combined_data$state=="washington",], mapping=aes(x=as.Date(
   geom_line(aes(y = log(cases, base=10), colour = "cases")) +
   geom_line(aes(y = net_approval*10, colour = "netapproval")) +
   labs(x="Date", y="Net Approval and Cases", title="netapproval and cases over time")
+
+
+# Finiding correlation between cases and net approval by state
+correlation_vals<-c()
+for(state in states){
+  state_data<-combined_data[combined_data$state==state,]
+  correlation<-unlist(cor.test(state_data$diff_growth,state_data$net_approval_rate,method="pearson"))[[4]]
+  correlation_vals<-c(correlation_vals, correlation)
+}
+
+correlations<-data.frame(state=states, corr=correlation_vals)
+
+# aside from texas, nebraska and a few other states. The correlation between netapproval and cases is close to -1
+
+#may_projections<-lm()
