@@ -95,6 +95,12 @@ combined_data
 # FOR GRAPHING
 
 # example for data from one state
-combined_data[combined_data$state=="alabama",]
+combined_data
+write(combined_data,"./combined_data.csv")
 # list of all the states
 states
+
+ggplot(combined_data[combined_data$state=="washington",], mapping=aes(x=as.Date(date)))+
+  geom_line(aes(y = log(cases, base=10), colour = "cases")) +
+  geom_line(aes(y = net_approval*10, colour = "netapproval")) +
+  labs(x="Date", y="Net Approval and Cases", title="netapproval and cases over time")
