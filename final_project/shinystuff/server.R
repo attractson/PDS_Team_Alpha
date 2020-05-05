@@ -9,6 +9,7 @@
 library(shiny)
 library(jsonlite)
 library(tidyverse)
+library(DT)
 
 source("useThis.R")
 
@@ -23,19 +24,19 @@ shinyServer(function(input, output) {
     output$casesTrendPlot <- renderPlot({
         ggplot(passStateData(), mapping=aes(x=as.Date(date)))+
             geom_line(aes(y = cases)) +
-            labs(x="Date", y="cases", title=paste0("netapproval and cases over time for ",input$stateSelect))
+            labs(x="Date", y="Cases", title=paste("Cases over time for", str_replace(input$stateSelect, "_", " ")))
     })
     
     output$approvalTrendPlot <- renderPlot({
         ggplot(passStateData(), mapping=aes(x=as.Date(date)))+
             geom_line(aes(y = net_approval)) +
-            labs(x="Date", y="Net Approval", title=paste0("netapproval and cases over time for ",input$stateSelect))
+            labs(x="Date", y="Net Approval", title=paste("Net approval over time for", str_replace(input$stateSelect, "_", " ")))
     })
     
     output$mortalityTrendPlot <- renderPlot({
         ggplot(passStateData(), mapping=aes(x=as.Date(date)))+
             geom_line(aes(y = death_rate)) +
-            labs(x="Date", y="death_rate", title=paste0("netapproval and cases over time for ",input$stateSelect))
+            labs(x="Date", y="Death Rate(deaths/cases)", title=paste("Death rate over time for", str_replace(input$stateSelect, "_", " ")))
     })
     
     output$casesApproval_corr_coeff <- reactive({
@@ -47,6 +48,8 @@ shinyServer(function(input, output) {
         corr<-(as.double((correlation_between_deaths_net_approval %>% filter(state==input$stateSelect))$corr))
         return(paste("correlation coeff between deaths and net approval is:", corr))
     })
+    
+    output$approvalDT<-DT::renderDataTable({combined_data})
 
     # output$distPlot <- renderPlot({
     # 

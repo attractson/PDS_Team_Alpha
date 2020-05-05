@@ -75,18 +75,18 @@ covid_by_state<-covid_by_state %>%
 covid_by_state = covid_by_state %>%
   group_by(state) %>%
   arrange(date) %>%
-  mutate(Diff_cases_date = date - lag(date),  
-         Diff_cases = cases - lag(cases),
-         cases_rate_percent = Diff_cases /as.integer(Diff_cases_date)/cases* 100)
+  mutate(delta_cases_date = date - lag(date),  
+         delta_cases = cases - lag(cases),
+         cases_rate_percent_change = delta_cases /as.integer(delta_cases_date)/cases)
 
 
 #Rate_percent covid death growth rate
 covid_by_state = covid_by_state %>%
   group_by(state) %>%
   arrange(date) %>%
-  mutate(Diff_death_date = date - lag(date),  
-         Diff_death = deaths - lag(deaths),
-         Death_rate_percent = Diff_death /as.integer(Diff_death_date)/deaths*100)
+  mutate(delta_death_date = date - lag(date),  
+         delta_death = deaths - lag(deaths),
+         Death_rate_percent_change = delta_death /as.integer(delta_death_date)/deaths)
 covid_by_state[covid_by_state$state=="alabama",]
 ########################
 
@@ -105,11 +105,11 @@ combined_data<-inner_join(ratings_by_state, covid_by_state, by=c("state", "date"
 
 #percent of change in approval rating
 combined_data <- combined_data%>%
-                        mutate(Diff_date = date - lag(date),  
-                                Diff_approval_rate = net_approval - lag(net_approval), #fix this line
-                                approval_rate_percent = Diff_approval_rate /as.integer(Diff_approval_rate)/net_approval*100)
+                        mutate(delta_date = date - lag(date),  
+                                delta_approval_rate = net_approval - lag(net_approval), #fix this line
+                                approval_rate_percent_change = delta_approval_rate /as.integer(delta_date)/net_approval)
 str(combined_data)
-
+combined_data
 
 # FOR GRAPHING
 
@@ -147,6 +147,9 @@ correlation_between_approval_percent_cases_percent<-data.frame(state=states, cor
 correlation_between_deaths_net_approval<-data.frame(state=states, corr=correlation_deaths_net_approval, stringsAsFactors = F)
 
 # aside from texas, nebraska and a few other states. The correlation between netapproval and cases is close to -1
+
+
+combined_data
 
 # (as.double((correlation_between_cases_net_approval %>% filter(state=="alabama"))$corr))
 str(correlation_between_cases_net_approval)

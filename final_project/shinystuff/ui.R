@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(DT)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -36,15 +37,41 @@ shinyUI(fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("casesTrendPlot"),
             plotOutput("approvalTrendPlot"),
+            plotOutput("casesTrendPlot"),
             plotOutput("mortalityTrendPlot"),
-            sidebarPanel(
-                textOutput("casesApproval_corr_coeff")
+            helpText(textOutput("casesApproval_corr_coeff")),
+            helpText(textOutput("deathsApproval_corr_coeff")),
+            hr(),
+            h2("The Process"),
+            h4("Getting the Approval Data"),
+            p(
+                "We got the job approval data for Trump by state and over time from:",
+                 br(),
+                a("https://civiqs.com/results/approve_president_trump?annotations=true&uncertainty=true&zoomIn=true"),
+                br(),
+                "where we manual scraped json files for each state. We compiled all the data into a single dataframe",
+              
             ),
-            sidebarPanel(
-                textOutput("deathsApproval_corr_coeff")
+            
+            h4("Getting the Covid-19 Data"),
+            p(
+                "We got the covid-19 data for states over time from:",
+                br(),
+                a("https://raw.githubusercontent.com/jakevdp/data-USstates/master/state-population.csv"),
+                br(),
+                "where we found the cases, deaths, and rates for states over time",
+            ),
+            
+            h4("Combining the Data"),
+            p(
+                "The data was then combined into the following dataframe:",
+                DT::dataTableOutput("approvalDT")
+            ),
+            p(
+                "The graphs above use data from this data frame"
             )
+            
         )
     )
 ))
