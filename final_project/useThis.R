@@ -89,8 +89,9 @@ str(ratings_by_state) # ratings dataframe
 str(covid_by_state) # cases and deaths dataframe
 
 combined_data<-inner_join(ratings_by_state, covid_by_state, by=c("state", "date"))
-combined_data <- mutate(combined_data, net_approval_rate=net_approval-lag(net_approval))
+combined_data <- 
 combined_data
+
 
 # FOR GRAPHING
 
