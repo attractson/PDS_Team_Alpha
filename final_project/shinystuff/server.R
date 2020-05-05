@@ -29,12 +29,23 @@ shinyServer(function(input, output) {
     output$approvalTrendPlot <- renderPlot({
         ggplot(passStateData(), mapping=aes(x=as.Date(date)))+
             geom_line(aes(y = net_approval)) +
-            labs(x="Date", y="Net Approval and log(Cases)", title=paste0("netapproval and cases over time for ",input$stateSelect))
+            labs(x="Date", y="Net Approval", title=paste0("netapproval and cases over time for ",input$stateSelect))
     })
     
-    output$corr_coeff <- reactive({
+    output$mortalityTrendPlot <- renderPlot({
+        ggplot(passStateData(), mapping=aes(x=as.Date(date)))+
+            geom_line(aes(y = death_rate)) +
+            labs(x="Date", y="death_rate", title=paste0("netapproval and cases over time for ",input$stateSelect))
+    })
+    
+    output$casesApproval_corr_coeff <- reactive({
         corr<-(as.double((correlation_between_cases_net_approval %>% filter(state==input$stateSelect))$corr))
-        return(paste("correlation coeff between net approval and cases is:", corr))
+        return(paste("correlation coeff between cases and net approval is:", corr))
+    })
+    
+    output$deathsApproval_corr_coeff <- reactive({
+        corr<-(as.double((correlation_between_deaths_net_approval %>% filter(state==input$stateSelect))$corr))
+        return(paste("correlation coeff between deaths and net approval is:", corr))
     })
 
     # output$distPlot <- renderPlot({

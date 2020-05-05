@@ -128,6 +128,7 @@ g<-ggplot(combined_data[combined_data$state=="washington",], mapping=aes(x=as.Da
 # Finiding correlation between cases and net approval by state
 correlation_cases_net_approval<-c()
 correlation_approval_percent_cases_percent<-c()
+correlation_deaths_net_approval<-c()
 for(state in states){
   state_data<-combined_data[ combined_data$state==state, ]
   correlation1<-unlist(cor.test(state_data$cases,state_data$net_approval,method="pearson"))[[4]]
@@ -135,11 +136,15 @@ for(state in states){
   
   correlation2<-unlist(cor.test(state_data$approval_rate_percent,state_data$cases_rate_percent,method="pearson"))[[4]]
   correlation_approval_percent_cases_percent<-c(correlation_approval_percent_cases_percent, correlation2)
+  
+  correlation3<-unlist(cor.test(state_data$deaths,state_data$net_approval,method="pearson"))[[4]]
+  correlation_deaths_net_approval<-c(correlation_deaths_net_approval, correlation3)
 }
 ######Fix this part, and also calculate correlation between growth rate and percent change in approval rating
 
 correlation_between_cases_net_approval<-data.frame(state=states, corr=correlation_cases_net_approval, stringsAsFactors = F)
 correlation_between_approval_percent_cases_percent<-data.frame(state=states, corr=correlation_approval_percent_cases_percent, stringsAsFactors = F)
+correlation_between_deaths_net_approval<-data.frame(state=states, corr=correlation_deaths_net_approval, stringsAsFactors = F)
 
 # aside from texas, nebraska and a few other states. The correlation between netapproval and cases is close to -1
 

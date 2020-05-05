@@ -38,8 +38,12 @@ shinyUI(fluidPage(
         mainPanel(
             plotOutput("casesTrendPlot"),
             plotOutput("approvalTrendPlot"),
+            plotOutput("mortalityTrendPlot"),
             sidebarPanel(
-                textOutput("corr_coeff")
+                textOutput("casesApproval_corr_coeff")
+            ),
+            sidebarPanel(
+                textOutput("deathsApproval_corr_coeff")
             )
         )
     )
