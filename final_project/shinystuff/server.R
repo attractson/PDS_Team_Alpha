@@ -49,6 +49,16 @@ shinyServer(function(input, output) {
         return(paste("correlation coeff between deaths and net approval is:", corr))
     })
     
+    output$dayData<-reactive({
+        d<-combined_data %>% filter(state==input$stateSelect, as.character(date)==as.character(input$dateSelect)) %>%
+            mutate(date=as.character(date))
+        paste0("Date: ", d[1], "; Net Approval: ", d[3], "; Cases: ", d[5], "; Deaths:", d[6],
+              "; Death Rate: ", d[7], "; Cases Percent Change: ", d[10], "; Deaths Percent Change: ", d[13],
+              "; Approval Percent Change: ", d[16])
+    })
+    
+    #output$dayData<-DT::renderDataTable({data.frame(c("1","2"), c("a","b"))})
+    
     output$approvalDT<-DT::renderDataTable({combined_data})
 
     # output$distPlot <- renderPlot({

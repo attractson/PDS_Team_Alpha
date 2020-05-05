@@ -6,8 +6,8 @@
 #
 #    http://shiny.rstudio.com/
 #
-
 library(shiny)
+library(DT)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -24,22 +24,35 @@ shinyUI(fluidPage(
                         multiple=FALSE
             ), # End of selectInput
             
+            sliderInput("dateSelect",
+                        "Data from date:",
+                        min = as.Date("2020-01-01","%Y-%m-%d"),
+                        max = as.Date("2020-04-30","%Y-%m-%d"),
+                        value=as.Date("2020-04-29","%Y-%m-%d"),
+            ), # End of sliderInput
+            
+            helpText(textOutput("dayData")),
+            
+            
+            
             # sliderInput("bins",
             #             "Number of bins:",
             #             min = 1,
             #             max = 50,
-            #             value = 30)
+            #             value = 30),
             helpText(                     "Table 1 illustrates change in the net approval in the state from the first incident of covid-19 to April 30th. Net approval is measured by subtracting disapproval rate to the approval rate.",
                                           br(),
                                           
                      "Table 2 shows the increase in the number of cases from the first incident of covid-19 to April 30th in the state.",
                      br(),
-                     "Table 3 shows the change in death rate over time in the state. It implies the fatality of Coronavirus in the States and potentially evaluate the effectiveness of the state government responding to the Covid-19."
+                     "Table 3 shows the change in death rate over time in the state. It implies the fatality of Coronavirus in the States and potentially evaluate the effectiveness of the state government responding to the Covid-19.",
                      #  br(),
                      #   "Table 4",
                      #  br(),
                      # "")
-            ),        ),
+
+            ),
+        ),
 
 
 
@@ -74,11 +87,11 @@ shinyUI(fluidPage(
             h4("Combining the Data"),
             p(
                 "The data was then combined into the following dataframe:",
-                DT::dataTableOutput("approval`DT`")
+                DT::dataTableOutput("approvalDT")
             ),
             p(
                 "The graphs above use data from this data frame"
-            )
+            ),
             
         )
     )

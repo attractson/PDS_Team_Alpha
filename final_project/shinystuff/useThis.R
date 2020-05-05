@@ -149,7 +149,21 @@ correlation_between_deaths_net_approval<-data.frame(state=states, corr=correlati
 # aside from texas, nebraska and a few other states. The correlation between netapproval and cases is close to -1
 
 
-combined_data
+str(combined_data)
 
 # (as.double((correlation_between_cases_net_approval %>% filter(state=="alabama"))$corr))
 str(correlation_between_cases_net_approval)
+
+test<-as.Date("2020-3-20","%Y-%m-%d")
+data<-(combined_data %>% filter(state=="missouri", as.character(date)==as.character(test)))
+data<-(data %>% mutate(date=as.character(date)))
+data
+paste("date", data[1])
+
+
+
+data
+df.from.char<-paste(deparse(df), collapse = "")
+df.from.char <- eval(parse(text = df.from.char))
+df.from.char
+print("DONE")
