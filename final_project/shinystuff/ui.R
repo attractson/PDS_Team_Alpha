@@ -26,7 +26,7 @@ shinyUI(fluidPage(
             
             sliderInput("dateSelect",
                         "Data from date:",
-                        min = as.Date("2020-01-01","%Y-%m-%d"),
+                        min = as.Date("2020-01-20","%Y-%m-%d"),
                         max = as.Date("2020-04-30","%Y-%m-%d"),
                         value=as.Date("2020-04-29","%Y-%m-%d"),
             ), # End of sliderInput
