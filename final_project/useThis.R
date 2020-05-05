@@ -90,9 +90,6 @@ covid_by_state = covid_by_state %>%
          Diff_death = deaths - lag(deaths),
          Death_rate_percent = Diff_death /as.integer(Diff_death_date)/deaths*100)
 
-state_population<-read.csv('https://raw.githubusercontent.com/jakevdp/data-USstates/master/state-population.csv')
-state_population<-filter(state_population, year==2020)
-
 ########################
 
 
