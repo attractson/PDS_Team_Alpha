@@ -138,22 +138,10 @@ for(state in states){
 }
 ######Fix this part, and also calculate correlation between growth rate and percent change in approval rating
 
-correlation_between_cases_net_approval<-data.frame(state=states, corr=correlation_cases_net_approval)
-correlation_between_approval_percent_cases_percent<-data.frame(state=states, corr=correlation_approval_percent_cases_percent)
+correlation_between_cases_net_approval<-data.frame(state=states, corr=correlation_cases_net_approval, stringsAsFactors = F)
+correlation_between_approval_percent_cases_percent<-data.frame(state=states, corr=correlation_approval_percent_cases_percent, stringsAsFactors = F)
 
 # aside from texas, nebraska and a few other states. The correlation between netapproval and cases is close to -1
 
-
-#Projection
-model<-lm(Diff_growth~net_approval)
-prediction <- predict(model, interval = "prediction")
-mydata <- cbind(combined_data, prediction)
-
-p <- ggplot(mydata, aes(Diff_growth, net_approval)) +
-  geom_point() +
-  stat_smooth(method = lm)
-
-p + geom_line(aes(y = lwr), color = "red", linetype = "dashed")+
-  geom_line(aes(y = upr), color = "red", linetype = "dashed")
-
-#Debug, line 113, line 138, line 146
+# (as.double((correlation_between_cases_net_approval %>% filter(state=="alabama"))$corr))
+str(correlation_between_cases_net_approval)
